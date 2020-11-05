@@ -41,12 +41,13 @@ new THREE.PerspectiveCamera(
 // set its position
 camera.position.set( 0, 0, 500 );
 
-// create the scene
+// SCENE
 const scene = new THREE.Scene();
 
 // set the background color - black
 // how to change the background color?
-scene.background = new THREE.Color( 0x000 );
+// scene.background = new THREE.Color( 0x000 );
+scene.background = THREE.ImageUtils.loadTexture('_starfield background created in photoshop 2048x2048 this can be used.png');
 
 // add the camera to the scene
 scene.add(camera);
@@ -71,7 +72,9 @@ scene.add(globe);
 var loader = new THREE.TextureLoader();
 
 // loader.load( 'land_ocean_ice_cloud_2048.jpg', function ( texture ) {
-loader.load( 'slavetrademaplarge.jpg', function ( texture ) {
+// loader.load( 'MapSlaveRoute_ENG_HARRIS.jpg', function ( texture ) {
+// loader.load( 'age_of_exploration.jpg', function ( texture ) {
+loader.load( 'vintage_map.jpg', function ( texture ) {
   //create the sphere
   var sphere = new THREE.SphereGeometry( RADIUS, SEGMENTS, RINGS );
 
