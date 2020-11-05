@@ -161,3 +161,26 @@ function checkKey(e) {
 // on key press invoke the above listener
 document.onkeydown = checkKey;
 
+// Rotate on mouse movement
+
+// setup an array that stores the previous mouse position with the start value at the center of the page
+var lastMove = [window.innerWidth/2, window.innerHeight/2];
+
+// define a listener function to fire when the mouse moves
+function rotateOnMouseMove(e) {
+  e = e || window.event;
+
+  //calculate difference between current and last mouse position
+  const moveX = ( e.clientX - lastMove[0]);
+  const moveY = ( e.clientY - lastMove[1]);
+  //rotate the globe based on distance of mouse moves (x and y) 
+  globe.rotation.y += ( moveX * .005);
+  globe.rotation.x += ( moveY * .005);
+
+  //store new position in lastMove
+  lastMove[0] = e.clientX;
+  lastMove[1] = e.clientY;
+}
+
+// define the event listener
+document.addEventListener('mousemove', rotateOnMouseMove);
