@@ -6,5 +6,5 @@ import Root from './components/Root';
 ReactDOM.render(
   <Root />,
   // <div>Hello</div>,
-  document.getElementById('app')
+  document.getElementById('main')
 );

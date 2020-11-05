@@ -1,4 +1,5 @@
 //import three.js
+import React from 'react';
 const THREE = require('three');
 
 //export stateless React component
@@ -6,7 +7,14 @@ export default function Root() {
   return null;
 }
 
-const container = document.querySelector('#app');
+// export default class Root extends React.Component {
+//   render() {
+//     // return <div>HELLO</div>
+//     return null
+//   }
+// }
+
+const container = document.querySelector('#container');
 
 // To display anything we need three things
 // camera
