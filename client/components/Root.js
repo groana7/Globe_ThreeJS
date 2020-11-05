@@ -13,7 +13,7 @@ const container = document.querySelector('#container');
 // renderer
 // scene
 
-// create renderer
+// create RENDERER
 const renderer = new THREE.WebGLRenderer();
 
 // set the size of the renderer
@@ -30,16 +30,10 @@ const NEAR = 0.1;
 const FAR = 10000;
 
 // then instantiate the camera
-const camera =
-new THREE.PerspectiveCamera(
-    VIEW_ANGLE,
-    ASPECT,
-    NEAR,
-    FAR
-);
+const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 
 // set its position
-camera.position.set( 0, 0, 500 );
+camera.position.set(0, 0, 500);
 
 // SCENE
 const scene = new THREE.Scene();
@@ -47,7 +41,9 @@ const scene = new THREE.Scene();
 // set the background color - black
 // how to change the background color?
 // scene.background = new THREE.Color( 0x000 );
-scene.background = THREE.ImageUtils.loadTexture('_starfield background created in photoshop 2048x2048 this can be used.png');
+scene.background = THREE.ImageUtils.loadTexture(
+  '_starfield background created in photoshop 2048x2048 this can be used.png'
+);
 
 // add the camera to the scene
 scene.add(camera);
@@ -74,25 +70,24 @@ var loader = new THREE.TextureLoader();
 // loader.load( 'land_ocean_ice_cloud_2048.jpg', function ( texture ) {
 // loader.load( 'MapSlaveRoute_ENG_HARRIS.jpg', function ( texture ) {
 // loader.load( 'age_of_exploration.jpg', function ( texture ) {
-loader.load( 'vintage_map.jpg', function ( texture ) {
+loader.load('vintage_map.jpg', function (texture) {
   //create the sphere
-  var sphere = new THREE.SphereGeometry( RADIUS, SEGMENTS, RINGS );
+  var sphere = new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS);
 
   //map the texture to the material. Read more about materials in three.js docs
-  var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+  var material = new THREE.MeshBasicMaterial({ map: texture, overdraw: 0.5 });
 
-  //create a new mesh with sphere geometry. 
-  var mesh = new THREE.Mesh( sphere, material );
+  //create a new mesh with sphere geometry.
+  var mesh = new THREE.Mesh(sphere, material);
 
   //add mesh to globe group
   globe.add(mesh);
-} );
+});
 
 globe.position.z = -300;
 
 // Create light
-const pointLight =
-new THREE.PointLight(0xFFFFFF);
+const pointLight = new THREE.PointLight(0xffffff);
 
 // position the light
 pointLight.position.x = 10;
@@ -102,12 +97,11 @@ pointLight.position.z = 400;
 // add the light to the scene
 scene.add(pointLight);
 
-function update () {
-
+function update() {
   //Render:
   renderer.render(scene, camera);
   // Schedule the next frame:
-  requestAnimationFrame(update);  
+  requestAnimationFrame(update);
 }
 // Schedule the first frame:
 requestAnimationFrame(update);
@@ -133,7 +127,7 @@ function animationBuilder(direction) {
       default:
         break;
     }
-  }
+  };
 }
 
 // store animation call in directions object
@@ -141,14 +135,14 @@ var animateDirection = {
   up: animationBuilder('up'),
   down: animationBuilder('down'),
   left: animationBuilder('left'),
-  right: animationBuilder('right')
-}
+  right: animationBuilder('right'),
+};
 
 // define the listener function we want to occur after a key has been pressed
 function checkKey(e) {
   e = e || window.event;
   e.preventDefault();
- 
+
   //based on keycode, trigger appropriate animation:
   if (e.keyCode == '38') {
     animateDirection.up();
@@ -164,6 +158,7 @@ function checkKey(e) {
 // on key press invoke the above listener
 document.onkeydown = checkKey;
 
+/* PLACE TO BEGIN COMMENTING OUT TO TEST CLICK AND ROTATE */
 // Rotate on mouse movement
 
 // setup an array that stores the previous mouse position with the start value at the center of the page
@@ -176,7 +171,7 @@ function rotateOnMouseMove(e) {
   //calculate difference between current and last mouse position
   const moveX = ( e.clientX - lastMove[0]);
   const moveY = ( e.clientY - lastMove[1]);
-  //rotate the globe based on distance of mouse moves (x and y) 
+  //rotate the globe based on distance of mouse moves (x and y)
   globe.rotation.y += ( moveX * .005);
   globe.rotation.x += ( moveY * .005);
 
@@ -185,5 +180,29 @@ function rotateOnMouseMove(e) {
   lastMove[1] = e.clientY;
 }
 
+/*
+Click to drag:
+1. Press down on the mouse (mousedown)
+2. While it's pressed down, whereever we move it, it should run rotateOnMouseMove (mouseover)
+3. When we let go of the mouse (mouseup) we should stop rotateOnMouseMove
+*/
+
+// on mousedown call addMouseOver
+document.addEventListener('mousedown', addMouseOver)
+document.addEventListener('mouseup', removeMouseOver)
+
+// while mouseover run function rotateOnMouseMove
+function addMouseOver () {
+  document.addEventListener('mousemove', rotateOnMouseMove)
+}
+
+// need to make sure when we release mousedown we remove mouseover
+  // calls line 197
+// on mouseup remove the event lisener form mouseover
+const removeMouseOver = () => {
+  document.removeEventListener('mousemove', rotateOnMouseMove)
+}
+
 // define the event listener
-document.addEventListener('mousemove', rotateOnMouseMove);
+// code from tutorial
+// document.addEventListener('mousemove', rotateOnMouseMove);
