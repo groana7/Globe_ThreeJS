@@ -1,4 +1,4 @@
-//import three.js
+// Install three.js by running npm install three, and then import it
 const THREE = require('three');
 
 //export stateless React component
@@ -6,23 +6,25 @@ export default function Root() {
   return null;
 }
 
+// Get the DOM element in which you want to attach the scene
 const container = document.querySelector('#container');
 
 // To display anything we need three things
-// camera
 // renderer
+// camera
 // scene
 
 // create RENDERER
+// WebGL (Web Graphics Library) renders interactive 2 and 3D graphics in the browser.
 const renderer = new THREE.WebGLRenderer();
 
 // set the size of the renderer
-const WIDTH = window.innerWidth;
-const HEIGHT = window.innerHeight;
+const WIDTH = window.outerWidth;
+const HEIGHT = window.outerHeight;
 
 renderer.setSize(WIDTH, HEIGHT);
 
-// create a camera
+// CAMERA
 // first set up its attributes
 const VIEW_ANGLE = 45;
 const ASPECT = WIDTH / HEIGHT;
@@ -38,9 +40,7 @@ camera.position.set(0, 0, 500);
 // SCENE
 const scene = new THREE.Scene();
 
-// set the background color - black
-// how to change the background color?
-// scene.background = new THREE.Color( 0x000 );
+// set the background color
 scene.background = THREE.ImageUtils.loadTexture(
   '_starfield background created in photoshop 2048x2048 this can be used.png'
 );
@@ -67,23 +67,28 @@ scene.add(globe);
 // create our sphere and its texture, and mesh them together using three.js’s TextureLoader
 var loader = new THREE.TextureLoader();
 
-// loader.load( 'land_ocean_ice_cloud_2048.jpg', function ( texture ) {
-// loader.load( 'MapSlaveRoute_ENG_HARRIS.jpg', function ( texture ) {
-// loader.load( 'age_of_exploration.jpg', function ( texture ) {
+/* 
+We call the load method, which takes in our image url (here’s the image I used) as the first argument, and a function that: 1) creates a sphere with the predefined attributes, 2) maps the texture to the material (read more here about materials in the three.js docs), 3) creates a mesh of our sphere and the material, and 4) adds the mesh to our globe group.
+*/
+
 loader.load('vintage_map.jpg', function (texture) {
   //create the sphere
   var sphere = new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS);
 
-  //map the texture to the material. Read more about materials in three.js docs
-  var material = new THREE.MeshBasicMaterial({ map: texture, overdraw: 0.5 });
+  // map the texture to the material.
+  var material = new THREE.MeshPhongMaterial();
+  material.map = THREE.ImageUtils.loadTexture('vintage_map.jpg');
+  material.bumpMap = THREE.ImageUtils.loadTexture('16_bit_dem_large.JPG');
+  material.bumpScale = 3.0;
 
   //create a new mesh with sphere geometry.
   var mesh = new THREE.Mesh(sphere, material);
 
-  //add mesh to globe group
+  // add mesh to globe group
   globe.add(mesh);
 });
 
+// position the sphere backwards (along the z axis) so that we can see it
 globe.position.z = -300;
 
 // Create light
@@ -131,6 +136,7 @@ function animationBuilder(direction) {
 }
 
 // store animation call in directions object
+//  a directions object in which we’ll store the appropriate animation call per direction
 var animateDirection = {
   up: animationBuilder('up'),
   down: animationBuilder('down'),
@@ -158,51 +164,36 @@ function checkKey(e) {
 // on key press invoke the above listener
 document.onkeydown = checkKey;
 
-/* PLACE TO BEGIN COMMENTING OUT TO TEST CLICK AND ROTATE */
 // Rotate on mouse movement
-
 // setup an array that stores the previous mouse position with the start value at the center of the page
-var lastMove = [window.innerWidth/2, window.innerHeight/2];
+var lastMove = [window.outerWidth / 2, window.outerHeight / 2];
 
 // define a listener function to fire when the mouse moves
 function rotateOnMouseMove(e) {
   e = e || window.event;
 
   //calculate difference between current and last mouse position
-  const moveX = ( e.clientX - lastMove[0]);
-  const moveY = ( e.clientY - lastMove[1]);
+  const moveX = e.clientX - lastMove[0];
+  const moveY = e.clientY - lastMove[1];
   //rotate the globe based on distance of mouse moves (x and y)
-  globe.rotation.y += ( moveX * .005);
-  globe.rotation.x += ( moveY * .005);
+  globe.rotation.y += moveX * 0.005;
+  globe.rotation.x += moveY * 0.005;
 
   //store new position in lastMove
   lastMove[0] = e.clientX;
   lastMove[1] = e.clientY;
 }
 
-/*
-Click to drag:
-1. Press down on the mouse (mousedown)
-2. While it's pressed down, whereever we move it, it should run rotateOnMouseMove (mouseover)
-3. When we let go of the mouse (mouseup) we should stop rotateOnMouseMove
-*/
-
 // on mousedown call addMouseOver
-document.addEventListener('mousedown', addMouseOver)
-document.addEventListener('mouseup', removeMouseOver)
+document.addEventListener('mousedown', addMouseOver);
+document.addEventListener('mouseup', removeMouseOver);
 
 // while mouseover run function rotateOnMouseMove
-function addMouseOver () {
-  document.addEventListener('mousemove', rotateOnMouseMove)
+function addMouseOver() {
+  document.addEventListener('mousemove', rotateOnMouseMove);
 }
 
-// need to make sure when we release mousedown we remove mouseover
-  // calls line 197
 // on mouseup remove the event lisener form mouseover
 const removeMouseOver = () => {
-  document.removeEventListener('mousemove', rotateOnMouseMove)
-}
-
-// define the event listener
-// code from tutorial
-// document.addEventListener('mousemove', rotateOnMouseMove);
+  document.removeEventListener('mousemove', rotateOnMouseMove);
+};
