@@ -79,7 +79,7 @@ loader.load('vintage_map.jpg', function (texture) {
   var material = new THREE.MeshPhongMaterial();
   material.map = THREE.ImageUtils.loadTexture('vintage_map.jpg');
   material.bumpMap = THREE.ImageUtils.loadTexture('16_bit_dem_large.JPG');
-  material.bumpScale = 3.0;
+  material.bumpScale = 4.0;
 
   //create a new mesh with sphere geometry.
   var mesh = new THREE.Mesh(sphere, material);
@@ -184,16 +184,16 @@ function rotateOnMouseMove(e) {
   lastMove[1] = e.clientY;
 }
 
-// on mousedown call addMouseOver
-document.addEventListener('mousedown', addMouseOver);
-document.addEventListener('mouseup', removeMouseOver);
-
 // while mouseover run function rotateOnMouseMove
 function addMouseOver() {
   document.addEventListener('mousemove', rotateOnMouseMove);
 }
 
 // on mouseup remove the event lisener form mouseover
-const removeMouseOver = () => {
+function removeMouseOver () {
   document.removeEventListener('mousemove', rotateOnMouseMove);
 };
+
+// on mousedown call addMouseOver
+document.addEventListener('mousedown', addMouseOver);
+document.addEventListener('mouseup', removeMouseOver);
